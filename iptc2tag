@@ -1,0 +1,23 @@
+#! /usr/bin/env fish
+
+# Takes a rating stored in IPTC EXIF metadata and adds a Finder tag for it.
+# 
+# The tags are named "★", "★★", "★★★", "★★★★", and "★★★★★". Ratings of 0 stars
+# will not produce a tag.
+# 
+# Ensure that the tags already exist in the Finder menu before running this
+# tool.
+# 
+# Dependencies: exiftool and tag. Developed with exiftool v13.55 and tag
+# v0.10.0.
+
+for file in $argv
+    set rating (exiftool -RATING -veryShort -printFormat '$Rating' -API MissingTagValue=0 $file)
+    if test $rating -ne 0
+        set tag_name (string repeat -c $rating '★')
+        echo "Tagging $file (rating: $rating) as $tag_name"
+        tag --add "$tag_name" $file
+    else
+        echo "Not tagging $file because of missing or 0 rating."
+    end
+end
