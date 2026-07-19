@@ -7,6 +7,10 @@ See the comments at the top of each file for more information.
 
 No AI was used in the creation of this project.
 
+This repo is mirrored between
+[Tangled](https://tangled.org/did:plc:36y7tf2inavnvxdms7wudfx2) and
+[GitHub](https://github.com/gavinmorrow/iptc-rating-finder-tags).
+
 ## Dependencies
 
 - [`fish`](https://fishshell.com/). Tested with v4.0.0.
