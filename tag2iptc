@@ -10,7 +10,11 @@
 # v0.10.0.
 
 for file in $argv
-    set tag_name (tag --list $file | awk '$NF ~ /^★+$/ { print $NF }')
+    # `tag --list` outputs a table, where the first column is the file name and
+    # the second column is a comma-separated list of tags.
+    # The first awk takes the last column, and the second one finds the rating
+    # tag (w/ a separator of `,`).
+    set tag_name (tag --list $file | awk '$NF { print $NF }' | awk -F ',' '$NF ~ /^★+$/ { print $NF }')
     if test -n "$tag_name"
         set rating (string length $tag_name)
         set current_rating (exiftool -RATING -veryShoft -printFormat '$Rating' -API MissingTagValue=0 $file)
