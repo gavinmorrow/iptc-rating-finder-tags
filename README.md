@@ -1,7 +1,9 @@
 # IPTC Ratings <=> Finder Tags
 
-This repo contains two tools, `iptc2tag` and `tag2iptc`. They convert to and
-from IPTC 5-star ratings (stored in EXIF metadata) and Finder tags.
+This repo contains three tools: `iptc2tag`, `tag2iptc`, and `rstat`. `iptc2tag`
+and `tag2iptc` convert to and from IPTC 5-star ratings (stored in EXIF metadata)
+and Finder tags. `rstat` shows how many of each rating there are, along with
+total and percentages.
 
 See the comments at the top of each file for more information.
 

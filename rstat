@@ -1,0 +1,58 @@
+#! /usr/bin/env fish
+
+# Shows stats on the ratings of each file, as read from Finder tags.
+# The tags are named "★", "★★", "★★★", "★★★★", and "★★★★★". Behavior if multiple
+# tags are added is undefined. If none of the tags are present, the file will
+# be unchanged.
+# 
+# Dependencies: exiftool. Developed with exiftool v13.55.
+
+begin
+    # Use begin so that all the local variables don't leak.
+    set --local 1star 0
+    set --local 2star 0
+    set --local 3star 0
+    set --local 4star 0
+    set --local 5star 0
+    set --local other 0
+
+    for file in $argv
+        set tag_name (tag --list $file | awk '$NF { print $NF }' | awk -F ',' '$NF ~ /^★+$/ { print $NF }')
+
+        set --local counter other
+        if test -n "$tag_name"
+            set rating (string length $tag_name)
+            switch $rating
+                case 1
+                    set counter 1star
+                case 2
+                    set counter 2star
+                case 3
+                    set counter 3star
+                case 4
+                    set counter 4star
+                case 5
+                    set counter 5star
+                case "*"
+                    echo "File $file had a rating of $rating (not between 1 and 5)."
+                    set counter other
+            end
+        else
+            echo "File $file was not rated."
+            set counter other
+        end
+
+        set $counter (math $$counter + 1)
+    end
+
+    set --local total (math $1star + $2star + $3star + $4star + $5star + $other)
+
+    echo '    ★' $1star (math --scale 1 "$1star / $total * 100")
+    echo '   ★★' $2star (math --scale 1 "$2star / $total * 100")
+    echo '  ★★★' $3star (math --scale 1 "$3star / $total * 100")
+    echo ' ★★★★' $4star (math --scale 1 "$4star / $total * 100")
+    echo '★★★★★' $5star (math --scale 1 "$5star / $total * 100")
+    echo other $other (math $other / $total)
+    echo -----
+    echo total $total
+end
